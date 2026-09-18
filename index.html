@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="Expense & Budget Visualizer by Arya Surya Pratama"
+  >
+
+  <title>Expense & Budget Visualizer</title>
+
+  <link
+    rel="preconnect"
+    href="https://fonts.googleapis.com"
+  >
+
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+    rel="stylesheet"
+  >
+
+  <link
+    rel="stylesheet"
+    href="css/style.css"
+  >
+</head>
+
+<body>
+
+  <div class="app-shell">
+
+    <!-- HEADER -->
+    <header class="topbar">
+
+      <div>
+        <p class="eyebrow">
+          Personal Finance
+        </p>
+
+        <h1>
+          Expense & Budget Visualizer
+        </h1>
+
+        <p class="subtitle">
+          Track your spending and keep your budget under control.
+        </p>
+      </div>
+
+      <button
+        id="themeToggle"
+        class="theme-toggle"
+        type="button"
+        aria-label="Toggle dark mode"
+      >
+        🌙
+      </button>
+
+    </header>
+
+
+    <main>
+
+      <!-- SUMMARY -->
+      <section class="summary-grid">
+
+        <article class="summary-card">
+
+          <p class="summary-label">
+            Total Expenses
+          </p>
+
+          <h2 id="totalExpense">
+            Rp0
+          </h2>
+
+          <p class="summary-description">
+            Your total recorded spending.
+          </p>
+
+        </article>
+
+
+        <article class="summary-card">
+
+          <p class="summary-label">
+            Spending Limit
+          </p>
+
+          <h2 id="spendingLimitDisplay">
+            Not set
+          </h2>
+
+          <form
+            id="limitForm"
+            class="limit-form"
+          >
+
+            <label
+              for="limitInput"
+              class="sr-only"
+            >
+              Spending limit
+            </label>
+
+            <input
+            id="limitInput"
+            type="number"
+            min="1"
+            step="1"
+            placeholder="e.g. 1000000"
+            required
+            >
+
+            <button
+              type="submit"
+              class="secondary-button"
+            >
+              Set
+            </button>
+
+          </form>
+
+        </article>
+
+
+        <article
+          id="remainingCard"
+          class="summary-card"
+        >
+
+          <p class="summary-label">
+            Remaining Budget
+          </p>
+
+          <h2 id="remainingBudget">
+            -
+          </h2>
+
+          <p
+            id="budgetStatus"
+            class="summary-description"
+          >
+            Set a spending limit to start.
+          </p>
+
+        </article>
+
+      </section>
+
+
+      <!-- MAIN DASHBOARD -->
+      <section class="dashboard-grid">
+
+        <!-- ADD TRANSACTION -->
+        <article class="card">
+
+          <div class="section-heading">
+
+            <div>
+              <p class="eyebrow">
+                Expense
+              </p>
+
+              <h2>
+                Add Transaction
+              </h2>
+            </div>
+
+          </div>
+
+
+          <form
+            id="transactionForm"
+            class="transaction-form"
+          >
+
+            <div class="form-group">
+
+              <label for="itemName">
+                Item Name
+              </label>
+
+              <input
+                id="itemName"
+                type="text"
+                maxlength="50"
+                placeholder="e.g. Lunch"
+                required
+              >
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label for="amount">
+                Amount
+              </label>
+
+              <input
+                id="amount"
+                type="number"
+                min="1"
+                step="1"
+                placeholder="e.g. 50000"
+                required
+              >
+
+            </div>
+
+
+            <div class="form-group">
+
+              <label for="category">
+                Category
+              </label>
+
+              <select
+                id="category"
+                required
+              >
+
+                <option value="">
+                  Select category
+                </option>
+
+                <option value="Food">
+                  Food
+                </option>
+
+                <option value="Transport">
+                  Transport
+                </option>
+
+                <option value="Fun">
+                  Fun
+                </option>
+
+              </select>
+
+            </div>
+
+
+            <button
+              type="submit"
+              class="primary-button"
+            >
+              Add Transaction
+            </button>
+
+
+            <p
+              id="formMessage"
+              class="form-message"
+              aria-live="polite"
+            ></p>
+
+          </form>
+
+        </article>
+
+
+        <!-- CHART -->
+        <article class="card">
+
+          <div class="section-heading">
+
+            <div>
+              <p class="eyebrow">
+                Overview
+              </p>
+
+              <h2>
+                Spending Breakdown
+              </h2>
+            </div>
+
+          </div>
+
+
+          <div class="chart-container">
+
+            <canvas
+              id="expenseChart"
+              width="300"
+              height="300"
+            ></canvas>
+
+            <div
+              id="chartEmptyState"
+              class="chart-empty"
+            >
+              <span>◔</span>
+
+              <p>
+                Add transactions to see your spending chart.
+              </p>
+            </div>
+
+          </div>
+
+
+          <div class="category-summary">
+
+            <div>
+              <span class="category-dot food-dot"></span>
+
+              <span>
+                Food
+              </span>
+
+              <strong id="foodTotal">
+                Rp0
+              </strong>
+            </div>
+
+
+            <div>
+              <span class="category-dot transport-dot"></span>
+
+              <span>
+                Transport
+              </span>
+
+              <strong id="transportTotal">
+                Rp0
+              </strong>
+            </div>
+
+
+            <div>
+              <span class="category-dot fun-dot"></span>
+
+              <span>
+                Fun
+              </span>
+
+              <strong id="funTotal">
+                Rp0
+              </strong>
+            </div>
+
+          </div>
+
+        </article>
+
+      </section>
+
+
+      <!-- TRANSACTIONS -->
+      <section class="card transactions-section">
+
+        <div class="transactions-header">
+
+          <div>
+            <p class="eyebrow">
+              History
+            </p>
+
+            <h2>
+              Transactions
+            </h2>
+          </div>
+
+
+          <div class="transaction-controls">
+
+            <span
+              id="transactionCounter"
+              class="badge"
+            >
+              0 transactions
+            </span>
+
+
+            <label
+              for="sortTransactions"
+              class="sr-only"
+            >
+              Sort transactions
+            </label>
+
+            <select
+              id="sortTransactions"
+              class="sort-select"
+            >
+
+              <option value="newest">
+                Newest
+              </option>
+
+              <option value="oldest">
+                Oldest
+              </option>
+
+              <option value="highest">
+                Highest Amount
+              </option>
+
+              <option value="lowest">
+                Lowest Amount
+              </option>
+
+            </select>
+
+          </div>
+
+        </div>
+
+
+        <div
+          id="transactionList"
+          class="transaction-list"
+        ></div>
+
+
+        <div
+          id="emptyTransactionState"
+          class="empty-state"
+        >
+
+          <span>💳</span>
+
+          <h3>
+            No transactions yet
+          </h3>
+
+          <p>
+            Add your first expense using the form above.
+          </p>
+
+        </div>
+
+      </section>
+
+    </main>
+
+
+    <footer>
+
+      <p>
+        Built by Arya Surya Pratama with HTML, CSS, and Vanilla JavaScript.
+      </p>
+
+    </footer>
+
+  </div>
+
+
+  <script src="js/script.js"></script>
+
+</body>
+</html>
